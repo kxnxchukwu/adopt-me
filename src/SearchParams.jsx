@@ -20,8 +20,9 @@ export default function SearchParams() {
   const results = useQuery(["search", requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
   return (
-    <div className="search-params">
+    <div className="my-0 mx-auto w-11/12">
       <form
+        className="item-center mb-10 flex flex-col items-center justify-center rounded-lg bg-gray-200 p-10 shadow-lg"
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target);
@@ -45,6 +46,7 @@ export default function SearchParams() {
             id="location"
             placeholder="Location"
             type="text"
+            className="search-input"
           />
         </label>
         <label htmlFor="animal">
@@ -55,6 +57,7 @@ export default function SearchParams() {
             onChange={(e) => {
               setAnimal(e.target.value);
             }}
+            className="search-input"
           >
             <option />
             {ANIMALS.map((animal) => (
@@ -66,7 +69,12 @@ export default function SearchParams() {
         </label>
         <label htmlFor="breed">
           Breed
-          <select id="breed" disabled={BREEDS.length === 0} name="breed">
+          <select
+            id="breed"
+            disabled={BREEDS.length === 0}
+            name="breed"
+            className="search-input grayed-out-disabled"
+          >
             <option />
             {BREEDS.map((breed) => (
               <option key={breed} value={breed}>
@@ -75,7 +83,9 @@ export default function SearchParams() {
             ))}
           </select>
         </label>
-        <button>Submit</button>
+        <button className="rounded border-none bg-orange-500 px-6 py-2 text-white hover:opacity-50">
+          Submit
+        </button>
       </form>
       <Results pets={pets} />
     </div>
