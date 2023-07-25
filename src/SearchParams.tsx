@@ -3,45 +3,47 @@ import {
   useDeferredValue,
   useMemo,
   useState,
-  useTransition,
-} from "react";
-import { useQuery } from "@tanstack/react-query";
-import AdoptedPetContext from "./AdoptedPetContext";
-import fetchSearch from "./fetchSearch";
-import useBreedList from "./useBreedList";
-import Results from "./Results";
+  useTransition
+} from 'react';
+import { useQuery } from '@tanstack/react-query';
+import AdoptedPetContext from './AdoptedPetContext';
+import fetchSearch from './fetchSearch';
+import useBreedList from './useBreedList';
+import Results from './Results';
+import { Animal } from './APIResponseTypes';
 
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const ANIMALS: Animal[] = ['bird', 'cat', 'dog', 'rabbit', 'reptile'];
 
 export default function SearchParams() {
   const [requestParams, setRequestParams] = useState({
-    location: "",
-    animal: "",
-    breed: "",
+    location: '',
+    animal: '' as Animal,
+    breed: ''
   });
-  const [animal, setAnimal] = useState("");
+  const [animal, setAnimal] = useState('' as Animal);
   const [BREEDS] = useBreedList(animal);
   const [adoptedPet, _] = useContext(AdoptedPetContext);
 
-  const results = useQuery(["search", requestParams], fetchSearch);
+  const results = useQuery(['search', requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
   const deferredPets = useDeferredValue(pets);
   const renderedPets = useMemo(
     () => <Results pets={deferredPets} />,
-    [deferredPets],
+    [deferredPets]
   );
   const [isPending, startTransition] = useTransition();
   return (
     <div className="my-0 mx-auto w-11/12">
       <form
         className="item-center mb-10 flex flex-col items-center justify-center rounded-lg bg-gray-200 p-10 shadow-lg"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target);
+        onSubmit={(event) => {
+          event.preventDefault();
+          const formData = new FormData(event.currentTarget);
           const searchObject = {
-            animal: formData.get("animal") ?? "",
-            breed: formData.get("breed") ?? "",
-            location: formData.get("location") ?? "",
+            animal:
+              (formData.get('animal')?.toString() as Animal) ?? ('' as Animal),
+            breed: formData.get('breed')?.toString() ?? '',
+            location: formData.get('location')?.toString() ?? ''
           };
           startTransition(() => {
             setRequestParams(searchObject);
@@ -69,7 +71,10 @@ export default function SearchParams() {
             id="animal"
             value={animal}
             onChange={(e) => {
-              setAnimal(e.target.value);
+              setAnimal(e.target.value as Animal);
+            }}
+            onBlur={(e) => {
+              setAnimal(e.target.value as Animal);
             }}
             className="search-input"
           >
