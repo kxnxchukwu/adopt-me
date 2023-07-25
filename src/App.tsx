@@ -1,28 +1,29 @@
-import { useState, lazy, Suspense } from "react";
-import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AdoptedPetContext from "./AdoptedPetContext";
+import { useState, lazy, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import AdoptedPetContext from './AdoptedPetContext';
+import { Pet as PetType } from './APIResponseTypes';
 
-const SearchParams = lazy(() => import("./SearchParams"));
-const Details = lazy(() => import("./Details"));
+const SearchParams = lazy(() => import('./SearchParams'));
+const Details = lazy(() => import('./Details'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: Infinity,
-      cacheTime: Infinity,
-    },
-  },
+      cacheTime: Infinity
+    }
+  }
 });
 
 const App = () => {
-  const adoptedPet = useState(null);
+  const adoptedPet = useState(null as PetType | null);
   return (
     <div
       className="m-0 p-0"
       style={{
-        background: "url(http://pets-images.dev-apis.com/pets/wallpaperA.jpg)",
+        background: 'url(http://pets-images.dev-apis.com/pets/wallpaperA.jpg)'
       }}
     >
       <BrowserRouter>
@@ -44,7 +45,7 @@ const App = () => {
                 </Link>
               </header>
               <Routes>
-                <Route path="/details/:id" element={<Details />} />{" "}
+                <Route path="/details/:id" element={<Details />} />{' '}
                 <Route path="/" element={<SearchParams />} />
               </Routes>
             </Suspense>
@@ -55,6 +56,6 @@ const App = () => {
   );
 };
 
-const container = document.getElementById("root");
+const container = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(container);
 root.render(<App />);
