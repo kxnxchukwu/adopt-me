@@ -1,7 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { Animal } from './APIResponseTypes';
 
-export default function Pet({ name, animal, breed, images, location, id }) {
-  let hero = "http://pets-images.dev-apis.com/pets/none.jpg";
+interface PetProps {
+  name: string;
+  animal: Animal;
+  breed: string;
+  images: string[];
+  location: string;
+  id: number;
+}
+
+export default function Pet({
+  name,
+  animal,
+  breed,
+  images,
+  location,
+  id
+}: PetProps) {
+  let hero = 'http://pets-images.dev-apis.com/pets/none.jpg';
 
   if (images.length) {
     hero = images[0];
