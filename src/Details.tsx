@@ -1,18 +1,24 @@
-import { useState, useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useParams, useNavigate } from "react-router-dom";
-import AdoptedPetContext from "./AdoptedPetContext";
-import Carousel from "./Carousel";
-import fetchPet from "./fetchPet";
-import ErrorBoundary from "./ErrorBoundary";
-import Modal from "./Modal";
+import { useState, useContext } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useNavigate } from 'react-router-dom';
+import AdoptedPetContext from './AdoptedPetContext';
+import Carousel from './Carousel';
+import fetchPet from './fetchPet';
+import ErrorBoundary from './ErrorBoundary';
+import Modal from './Modal';
 
 function Details() {
+  const { id } = useParams();
+
+  if (!id) {
+    throw new Error('There No ID passed');
+  }
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setAdoptedPet] = useContext(AdoptedPetContext);
-  const { id } = useParams();
-  const results = useQuery(["details", id], fetchPet);
+
+  const results = useQuery(['details', id], fetchPet);
 
   if (results.isLoading) {
     return (
@@ -22,8 +28,13 @@ function Details() {
     );
   }
 
-  const pet = results.data.pets[0];
+  const pet = results?.data?.pets[0];
 
+  if (!pet) {
+    throw new Error('No Pet Found');
+  }
+
+  console.log(showModal);
   return (
     <div className="details">
       <Carousel images={pet.images} />
@@ -40,7 +51,7 @@ function Details() {
                 <button
                   onClick={() => {
                     setAdoptedPet(pet);
-                    navigate("/");
+                    navigate('/');
                   }}
                 >
                   Yes
@@ -55,10 +66,10 @@ function Details() {
   );
 }
 
-export default function DetailsErrorBoundary(props) {
+export default function DetailsErrorBoundary() {
   return (
     <ErrorBoundary>
-      <Details {...props} />
+      <Details />
     </ErrorBoundary>
   );
 }
