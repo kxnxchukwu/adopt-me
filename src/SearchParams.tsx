@@ -1,36 +1,33 @@
-import {
-  useContext,
-  useDeferredValue,
-  useMemo,
-  useState,
-  useTransition
-} from 'react';
-import { useQuery } from '@tanstack/react-query';
-import AdoptedPetContext from './AdoptedPetContext';
-import fetchSearch from './fetchSearch';
+import { useDeferredValue, useMemo, useState, useTransition } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useSearchQuery } from './petApiService';
 import useBreedList from './useBreedList';
+import { all } from './searchParamsSlice';
 import Results from './Results';
-import { Animal } from './APIResponseTypes';
+import { Animal, Pet as PetType } from './APIResponseTypes';
+import { RootState } from './store';
 
 const ANIMALS: Animal[] = ['bird', 'cat', 'dog', 'rabbit', 'reptile'];
 
 export default function SearchParams() {
-  const [requestParams, setRequestParams] = useState({
-    location: '',
-    animal: '' as Animal,
-    breed: ''
-  });
+  const dispatch = useDispatch();
+  const requestParams = useSelector(
+    (state: RootState) => state.searchParams.value
+  );
   const [animal, setAnimal] = useState('' as Animal);
   const [BREEDS] = useBreedList(animal);
-  const [adoptedPet, _] = useContext(AdoptedPetContext);
+  const adoptedPet = useSelector((state: RootState) => state.adoptedPet.value);
 
-  const results = useQuery(['search', requestParams], fetchSearch);
-  const pets = results?.data?.pets ?? [];
+  let { data: pets } = useSearchQuery({
+    ...requestParams
+  });
+  pets = pets ?? [];
   const deferredPets = useDeferredValue(pets);
   const renderedPets = useMemo(
     () => <Results pets={deferredPets} />,
     [deferredPets]
   );
+
   const [isPending, startTransition] = useTransition();
   return (
     <div className="my-0 mx-auto w-11/12">
@@ -46,7 +43,7 @@ export default function SearchParams() {
             location: formData.get('location')?.toString() ?? ''
           };
           startTransition(() => {
-            setRequestParams(searchObject);
+            dispatch(all(searchObject));
           });
         }}
       >
@@ -68,6 +65,7 @@ export default function SearchParams() {
         <label htmlFor="animal">
           Animal
           <select
+            name="animal"
             id="animal"
             value={animal}
             onChange={(e) => {
