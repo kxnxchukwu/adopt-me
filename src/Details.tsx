@@ -1,9 +1,9 @@
-import { useState, useContext } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import AdoptedPetContext from './AdoptedPetContext';
+import { useDispatch } from 'react-redux';
+import { useGetPetQuery } from './petApiService';
+import { adopt } from './adoptedPetSlice';
 import Carousel from './Carousel';
-import fetchPet from './fetchPet';
 import ErrorBoundary from './ErrorBoundary';
 import Modal from './Modal';
 
@@ -15,12 +15,11 @@ function Details() {
   }
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
+  const dispatch = useDispatch();
 
-  const results = useQuery(['details', id], fetchPet);
+  const { isLoading, isFetching, data: pet } = useGetPetQuery({ id });
 
-  if (results.isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="loading-pane">
         <h2 className="loader">🌀</h2>
@@ -28,13 +27,10 @@ function Details() {
     );
   }
 
-  const pet = results?.data?.pets[0];
-
   if (!pet) {
     throw new Error('No Pet Found');
   }
 
-  console.log(showModal);
   return (
     <div className="details">
       <Carousel images={pet.images} />
@@ -50,7 +46,7 @@ function Details() {
               <div className="buttons">
                 <button
                   onClick={() => {
-                    setAdoptedPet(pet);
+                    dispatch(adopt(pet));
                     navigate('/');
                   }}
                 >
