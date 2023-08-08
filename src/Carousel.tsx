@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { Component, MouseEvent } from 'react';
 
 interface Props {
@@ -33,16 +34,25 @@ export default class Carousel extends Component<Props, State> {
     const { images } = this.props;
 
     return (
-      <div className="carousel">
-        <img src={images[active]} alt="Animal Here" />
-        <div className="carousel-smaller">
+      <div className="flex flex-col pr-6">
+        <img
+          className="basis-full"
+          data-testid="hero"
+          src={images[active]}
+          alt="Animal Here"
+        />
+        <div className="flex flex-row w-20 pt-8">
           {images.map((photo, index) => (
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
             <img
               onClick={this.handleIndexClick}
               data-index={index}
               key={photo}
               src={photo}
-              className={index === active ? 'active' : ''}
+              data-testid={`thumbnail${index}`}
+              className={
+                index === active ? 'active basis-1/4 p-2' : 'basis-1/4 p-2'
+              }
               alt="Animal Thumbnail"
             />
           ))}
