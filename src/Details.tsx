@@ -32,13 +32,32 @@ function Details() {
   }
 
   return (
-    <div className="details">
+    <div className="md:flex items-start justify-center py-12 2xl:px-20 md:px-6 px-4">
       <Carousel images={pet.images} />
       <div>
-        <h1>{pet.name}</h1>
-        <h2>{`${pet.animal} — ${pet.breed} — ${pet.city}, ${pet.state}`}</h2>
-        <button onClick={() => setShowModal(true)}>Adopt {pet.name}</button>
-        <p>{pet.description}</p>
+        <h1
+          className="
+							lg:text-2xl
+							text-xl
+							font-semibold
+							lg:leading-6
+							leading-7
+							text-gray-800
+							mt-2
+						"
+        >
+          {pet.name}
+        </h1>
+        <h2 className="hover:text-sky-400 pt-5 pb-5">{`${pet.animal} — ${pet.breed} — ${pet.city}, ${pet.state}`}</h2>
+        <button
+          className="rounded-none bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4"
+          onClick={() => setShowModal(true)}
+        >
+          Adopt {pet.name}
+        </button>
+        <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-gray-600 mt-4">
+          {pet.description}
+        </p>
         {showModal ? (
           <Modal>
             <div>
