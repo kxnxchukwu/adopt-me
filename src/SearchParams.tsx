@@ -4,7 +4,7 @@ import { useSearchQuery } from './petApiService';
 import useBreedList from './useBreedList';
 import { all } from './searchParamsSlice';
 import Results from './Results';
-import { Animal, Pet as PetType } from './APIResponseTypes';
+import { Animal } from './APIResponseTypes';
 import { RootState } from './store';
 
 const ANIMALS: Animal[] = ['bird', 'cat', 'dog', 'rabbit', 'reptile'];
