@@ -124,12 +124,12 @@ const PETS = [
   }
 ];
 
-test('renders correct with no pets', async () => {
+test('renders correct with no pets', () => {
   const { asFragment } = render(<Results pets={NO_PETS} />);
   expect(asFragment()).toMatchSnapshot();
 });
 
-test('renders correctly with some pets', async () => {
+test('renders correctly with some pets', () => {
   const { asFragment } = render(
     <StaticRouter>
       <Results pets={PETS} />
